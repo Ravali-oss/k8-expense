@@ -5,25 +5,27 @@ metadata:
   namespace: expense
   labels: 
     app: frontend
-    tier: frontend
+    tier: web
     project: expense
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: frontend
-      tier: frontend
+      tier: web
       project: expense
   template:
     metadata:
       labels:
         app: frontend
-        tier: frontend
+        tier: web
         project: expense
     spec:
       containers:
-      - name: frontend
+      - name: nginx
         image: ravaali/frontend:1.0.0
+        ports:
+        - containerPort: 8080
         
 ---
 kind: Service
@@ -35,9 +37,9 @@ spec:
   type: LoadBalancer
   selector: # labels are used as selectors
     app: frontend
-    tier: frontend
+    tier: web
     project: expense
   ports:
   - protocol: TCP
     port: 80 # service port
-    targetPort: 80
+    targetPort: 8080
